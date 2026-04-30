@@ -1,0 +1,105 @@
+# Reporte de Laboratorio 04 - UART y Comunicación Serial
+
+(Nombre del Estudiante)
+(Carnet)
+(Fecha)
+
+---
+
+## PARTE 01 - Preparación del Proyecto y Configuración de RealTerm
+*(En esta sección no hay preguntas. El proyecto se creó en STM32CubeIDE incluyendo los archivos uart_lab04.h y uart_lab04.c, y compiló correctamente con 0 errores).*
+
+---
+
+## PARTE 02 - Bench experimental de Baud Rate (con y sin protocolo)
+
+### Evidencias de Transmisión a diferentes Baud Rates (Sin errores)
+
+**Evidencia 2.1: Prueba a 115200 Baudios**
+*[PEGAR IMAGEN DE PUTTY A 115200 AQUÍ (Con datos raw y protocolo CNT=)]*
+**Observación:** Al configurar el número "115200" las letras en la terminal caen rápido. No se observan errores.
+
+**Evidencia 2.2: Prueba a 38400 Baudios**
+*[PEGAR IMAGEN DE PUTTY A 38400 AQUÍ]*
+**Observación:** En este caso podemos observar visualmente que la transmisión es un poco más lenta en mostrarse en la terminal.
+
+**Evidencia 2.3: Prueba a 19200 Baudios**
+*[PEGAR IMAGEN DE PUTTY A 19200 AQUÍ]*
+**Observación:** El mismo texto, pero se nota ligeramente la diferencia en velocidad visual.
+
+**Evidencia 2.4: Prueba a 9600 Baudios**
+*[PEGAR IMAGEN DE PUTTY A 9600 AQUÍ]*
+**Observación:** En este caso se observa más claramente la reducción de velocidad, sintiéndose letra por letra.
+
+**Conclusión preliminar:** El ojo humano no percibe la diferencia en tramas muy cortas a velocidades altas, pero la integridad de los datos se mantiene en todas las velocidades evaluadas siempre y cuando el emisor y el receptor tengan configurada la misma tasa de baudios.
+
+---
+
+### Evidencias de Error (Baud Mismatch)
+
+**Evidencia 2.5: Prueba de Baud Mismatch (Placa a 115200, PC a 9600)**
+*[PEGAR IMAGEN CON BASURA/CUADRITOS AQUÍ]*
+**Observación:** Al configurar velocidades diferentes (PC a 9600 y placa a 115200), se desincroniza la lectura de los bits y el terminal muestra basura (errores de tramas) porque está leyendo los pulsos eléctricos a una frecuencia incorrecta.
+
+---
+
+### Tabla de Resultados del Bench (Baud vs Comportamiento)
+
+| Configuración STM32 (Baud Rate) | Configuración Terminal (Baud Rate) | Resultados Observados del Comportamiento (Sin protocolo / Con protocolo) |
+| :---: | :---: | :--- |
+| **115200** | **115200** | **Integridad 100%.** Texto sin formato y paquetes CNT con Checksum se reciben de forma limpia y muy rápida (Prácticamente instantáneo al ojo). |
+| **38400** | **38400** | **Integridad 100%.** Se reciben limpiamente ambos modos. Visualmente se percibe una pequeñísima caída en la rápidez del scroll frente al anterior. |
+| **19200** | **19200** | **Integridad 100%.** Se reciben limpiamente ambos modos. El refresco de las letras se ve significativamente más relajado en la pantalla. |
+| **9600** | **9600** | **Integridad 100%.** Se reciben limpiamente ambos modos. El ploteo de caracteres se aprecia casi a forma de "letra por letra" por la baja velocidad. |
+| **115200** | **9600** | **FALLA TOTAL (Mismatch).** Recepción contínua de símbolos corruptos y cuadros. Error de tramado (*Framing Error*). Se requiere protocolo para rechazar la matriz de datos ilegible. |
+
+---
+
+## PARTE 03 - Terminal interactiva RX (Recepción de cadenas y acción con LED)
+
+### Evidencias de Control de LED y Recepción de Texto
+
+**Evidencia 3.1: Interacción con la terminal interactiva**
+*[PEGAR IMAGEN DEL COMANDO ON, OFF, QWERTY Y LEN AQUÍ. (Asegúrate de que diga "OFF" y no "OF")]*
+**Observación:** Se enviaron con éxito los comandos ON y OFF encendiendo y apagando el LED. Luego se le mandó la cadena "QWERTY" (6 letras) y la terminal devolvió "BLINK 6 times". Por último, el comando histórico LEN confirmó que el tamaño de la cadena registrada era 6.
+
+---
+
+## Cuestionario Resuelto
+
+### Preguntas Ejercicio 1 (Perteneciente a la PARTE 02)
+1. **¿Cómo ayuda el framing cuando hay error?**
+Ayuda porque envuelve el paquete de datos entre un inicio (STX) y un fin (ETX). Si hay un error de comunicación, el receptor sabe que si no recibe un ETX al final, esa cadena está rota o incompleta y puede descartarla automáticamente en vez de procesar "basura".
+
+2. **¿Se detecta corrupción por checksum?**
+Sí. El checksum (CHK) es una huella matemática de todo el mensaje. Si durante el viaje eléctrico por el cable cambia un solo bit (corrupción de datos), la matemática del receptor ya no va a cuadrar con la del emisor, y el receptor sabrá que el mensaje está dañado y lo descartará defendiendo la integridad del sistema.
+
+3. **¿Qué diferencia hay entre baud rate y bit rate?**
+El Bit rate es la cantidad de bits (unos y ceros) transmitidos por segundo. El Baud rate es la cantidad de oscilaciones o cambios de estado eléctrico por segundo en el cable. En el UART básico, dado que solo se envía 1 bit de información por cada oscilación eléctrica física, numéricamente ambos valores son exactamente iguales (ej. 115200 baudios = 115200 bps).
+
+4. **¿Qué registro se usa para configurar baud rate en USART y qué representa su valor?**
+Se usa el registro USART_BRR. Su valor numérico representa una fracción que le indica a la electrónica del microcontrolador por cuánto debe dividir su reloj principal de alta velocidad (APB) para generar el "pulso" exacto al que se deben emitir o muestrear los bits.
+
+5. **¿Qué se observa en RealTerm cuando el baud del PC no coincide con el baud del micro?**
+Se observa la recepción continua de caracteres extraños o "basura" visual. Esto se debe a que se producen Framing Errors. Como las frecuencias son distintas, el receptor (PC) se desincroniza, lee pedazos combinados de diferentes letras, y termina dibujando símbolos sin sentido.
+
+6. **¿Qué ventaja aporta el protocolo (STX/LEN/CHK/ETX) frente al modo sin protocolo?**
+El modo sin protocolo imprime ciegamente cualquier ruido magnético del cable como si fuera un dato real. El protocolo nos da seguridad; nos asegura saber dónde empieza y dónde termina un comando, cuánto debe medir, y nos permite (gracias al Checksum) bloquear y rechazar información interceptada o corrompida.
+
+### Preguntas Ejercicio 2 (Perteneciente a la PARTE 03)
+1. **¿Qué bandera indica que un dato fue recibido (RX) en USART?**
+La bandera RXNE (Receive Data Register Not Empty) dentro del registro de estado (USART_SR) notifica al microcontrolador que se ha completado el muestreo de un carácter y ya se puede leer desde el registro de datos (USART_DR).
+
+2. **¿Por qué es importante manejar overflow en el buffer?**
+Es importante para evitar salirnos de los límites del arreglo fijo de la memoria en C, lo que causaría que el programa escribiera sobre otras variables en la memoria RAM (Buffer Overflow), generando congelamiento de la placa y potenciales vulnerabilidades.
+
+3. **¿Qué diferencia hay entre leer carácter a carácter y procesar por línea completa?**
+Leer en modo polling carácter por carácter permite reaccionar enseguida con cada letra apretada; en cambio, el enfoque "línea por línea" implica esperar mientras el conjunto de letras se van estibando en el buffer temporal. La evaluación del comando arranca de golpe solo cuando el usuario indica el término con el botón Enter.
+
+---
+
+## Enlace del Video Demostrativo 🔗
+
+**🔗 Link al video en YouTube:** 
+*Pegar la URL de YouTube aquí*
+*(En este video se demuestra el funcionamiento de la PARTE 02 al configurar los baud rates 115200 y provocando el error a 9600 para ver la basura de datos. Seguidamente se adjunta la demostración de la PARTE 03 con el control de la terminal interactiva interactuando con los comandos ON, OFF, etc.)*

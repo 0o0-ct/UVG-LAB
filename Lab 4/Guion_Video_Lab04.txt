@@ -1,0 +1,40 @@
+# GUION PARA TUS VIDEOS DEL LABORATORIO 4 (Para tu compañero)
+
+¡Hola! Este guion está adaptado exactamente a los videos que ya tienen grabados por separado. 
+Tú solo tienes que darle Play al video, y tu compañero lee la sección correspondiente. 
+
+---
+
+## VIDEO 1: Ejercicio 1 - Pertenece a la PARTE 02 del documento
+
+**[CUANDO EL VIDEO EMPIEZA A REPRODUCIRSE A 115200]**:
+"Buenos días. En la PARTE 02 del laboratorio demostramos la transmisión experimental de datos UART. Empezamos probando a 115200 baudios. Como podemos ver, la terminal recibe correctamente la trama cruda del 0 a la F, y también los paquetes con el protocolo simple."
+
+**[SI EN TU VIDEO APARECEN LAS OTRAS VELOCIDADES: 38400, 19200 o 9600 FUNCIONANDO BIEN]**:
+*(Lee esta parte solo cuando salgan las otras velocidades en el video)*:
+"También comprobamos la transmisión a las velocidades de 38400, 19200 y 9600 baudios. En todas ellas la integridad de los datos se mantiene intacta en la terminal ya que tanto la placa como la PC están configuradas a la misma frecuencia."
+
+**[CUANDO EN EL VIDEO FORZAN EL ERROR Y SALE BASURA]**:
+"A continuación, forzamos un error de sincronización (un mismatch). La placa sigue enviando a 115200, pero la terminal lee a diferente velocidad. Al no coincidir las frecuencias, se producen errores de tramado y la pantalla grafica caracteres corruptos o 'basura'."
+
+**[CUANDO EN EL VIDEO VUELVEN A 115200 O SE VEN LOS CNT= CON LETRAS RARAS A LOS LADOS]**:
+"Para proteger los datos de esta corrupción, probamos la Parte 2.2 que es la implementación del protocolo simple (framing). Se envía el byte STX al inicio, luego los datos del contador, un Checksum, y un ETX de cierre. Si el Checksum en el receptor no cuadra por culpa de ruido eléctrico, la trama se descarta garantizando la integridad."
+
+---
+
+## VIDEO 2: Ejercicio 2 - Pertenece a la PARTE 03 del documento
+
+**[CUANDO EL VIDEO EMPIEZA Y ESCRIBEN 'ON']**:
+"Finalmente, pasamos a la PARTE 03 del laboratorio. Implementamos una terminal interactiva RX con un buffer. Primero demostramos los comandos. Escribimos 'ON' y podemos observar cómo se enciende el LED físico de la placa STM32."
+
+**[CUANDO EN EL VIDEO ESCRIBEN 'OFF']**:
+"Ahora escribimos 'OFF', y el LED se apaga. Todo esto funciona porque el procesador guarda letra por letra en un buffer de memoria de un tamaño máximo de 64 bytes para evitar overflows. Cuando presionamos Enter, procesa toda la línea, y ejecuta la lógica."
+
+**[CUANDO EN EL VIDEO ESCRIBEN UNA PALABRA CUALQUIERA (Ej: QWERTY)]**:
+"Para la regla principal de recepción de cadenas, el código es capaz de contar la longitud del texto. Enviamos la palabra y el LED de la placa procede a parpadear la misma cantidad de veces que letras tiene la cadena transmitida."
+
+**[CUANDO EN EL VIDEO ESCRIBEN EL COMANDO 'LEN']**:
+"Por último enviamos el comando 'LEN'. La placa revisa la memoria y nos responde con la longitud del último texto recibido. Con esto demostramos la total funcionalidad y concluimos las pruebas del laboratorio 4."
+
+---
+¡FIN! Con solo leer esto de fondo mientras reproducen los videos que ya tienen grabados, les quedará una explicación de 100 puntos.

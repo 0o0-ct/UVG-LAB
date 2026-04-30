@@ -1,0 +1,176 @@
+ 
+Universidad del Valle de Guatemala 
+Facultad de Ingeniería 
+Departamento de Ciencias de la Computación 
+CC3086 Programación de Microprocesadores                                                                                      Ciclo 1 de 2026 
+ 
+1 
+Laboratorio 05 - SysTick 
+ 
+Objetivos: 
+• Diseñar la lógica de control necesaria para generar la secuencia de activación de los dispositivos de 
+salida (LEDs). 
+• Programar en C para STM32F4xx la configuración de los puertos GPIO y la temporización requerida 
+para ejecutar la secuencia definida en el temario seleccionado. 
+• Construir físicamente el circuito y verificar su correcto funcionamiento con la placa de desarrollo. 
+ 
+Instrucciones: 
+Esta actividad se desarrollará en los grupos de laboratorio 04. Al finalizar adjunta en Canvas la versión 
+.pdf con las respuestas a las preguntas, los archivos .c con los códigos correspondientes a los ejercicios 
+de programación, y los enlaces de YouTube en donde se solicitan videos. 
+ 
+Temarios: 
+Diseñar, programar y construir un circuito controlado por el microcontrolador STM32 que utilice salidas 
+GPIO y SysTick para controlar y ejecutar la secuencia de LEDs asignada. La secuencia deberá activarse 
+automáticamente mediante una señal de reloj con el período indicado en el temario. Además, el Blue 
+Button de la placa deberá utilizarse para cambiar la velocidad de la secuencia: al presionarlo una vez, la 
+velocidad se duplica (2×); al presionarlo nuevamente, la secuencia vuelve a su velocidad normal. 
+ 
+1. Secuencia 1: señal de reloj con un período base de 1 segundo. 
+Estado Arreglo de 5 LEDs 
+1 ● ● ● ● ● 
+2 ● ● ● ● ● 
+3 ● ● ● ● ● 
+4 ● ● ● ● ● 
+5 ● ● ● ● ● 
+ 
+2. Secuencia 2 de activación/desactivación: señal de reloj con un período base de 1.5 segundos. 
+Estado Arreglo de 5 LEDs 
+1 ● ● ● ● ● 
+2 ● ● ● ● ● 
+3 ● ● ● ● ● 
+4 ● ● ● ● ● 
+5 ● ● ● ● ● 
+ 
+3. Secuencia 3 de activación/desactivación: señal de reloj con un período base de 2 segundos. 
+Estado Arreglo de 5 LEDs 
+1 ● ● ● ● ● 
+2 ● ● ● ● ● 
+3 ● ● ● ● ● 
+4 ● ● ● ● ● 
+5 ● ● ● ● ● 
+ 
+4. Secuencia 4 de activación/desactivación: señal de reloj con un período base de 2.5 segundos. 
+Estado Arreglo de 5 LEDs 
+1 ● ● ● ● ● 
+2 ● ● ● ● ● 
+3 ● ● ● ● ● 
+4 ● ● ● ● ● 
+5 ● ● ● ● ●  
+Universidad del Valle de Guatemala 
+Facultad de Ingeniería 
+Departamento de Ciencias de la Computación 
+CC3086 Programación de Microprocesadores                                                                                      Ciclo 1 de 2026 
+ 
+2 
+5. Secuencia 5 de activación/desactivación: señal de reloj con un período base de 0.5 segundos. 
+Estado Arreglo de 5 LEDs 
+1 ● ● ● ● ● 
+2 ● ● ● ● ● 
+3 ● ● ● ● ● 
+4 ● ● ● ● ● 
+5 ● ● ● ● ● 
+ 
+6. Secuencia 6 de activación/desactivación: señal de reloj con un período base de 0.8 segundos. 
+Estado Arreglo de 5 LEDs 
+1 ●● ● ● ● 
+2 ● ●● ● ● 
+3 ● ● ●● ● 
+4 ● ● ● ●● 
+5 ● ● ● ● ● 
+ 
+7. Secuencia 7 de activación/desactivación: señal de reloj con un período base de 1.2 segundos. 
+Estado Arreglo de 5 LEDs 
+1 ● ● ● ● ● 
+2 ● ● ● ● ● 
+3 ● ● ● ● ● 
+4 ● ● ● ● ● 
+5 ● ● ● ● ● 
+ 
+8. Secuencia 9 de activación/desactivación: señal de reloj con un período base de 1.8 segundos. 
+Estado Arreglo de 5 LEDs 
+1 ● ● ● ● ● 
+2 ● ● ● ● ● 
+3 ● ● ● ● ● 
+4 ● ● ● ● ● 
+5 ● ● ● ● ● 
+ 
+9. Secuencia 9 de activación/desactivación: señal de reloj con un período base de 2.2 segundos. 
+Estado Arreglo de 5 LEDs 
+1 ● ● ● ● ● 
+2 ● ● ● ● ● 
+3 ● ● ● ● ● 
+4 ● ● ● ● ● 
+5 ● ● ● ● ● 
+ 
+10. Secuencia 10 de activación/desactivación 
+Señal de reloj con un período base de 1.8 segundos. 
+Estado Arreglo de 5 LEDs 
+1 ● ● ● ● ● 
+2 ● ● ● ● ● 
+3 ● ● ● ● ● 
+4 ● ● ● ● ● 
+5 ● ● ● ● ● 
+PARTE 01 - Diseño  
+Universidad del Valle de Guatemala 
+Facultad de Ingeniería 
+Departamento de Ciencias de la Computación 
+CC3086 Programación de Microprocesadores                                                                                      Ciclo 1 de 2026 
+ 
+3 
+En esta primera parte del laboratorio, cada grupo deberá diseñar la lógica de funcionamiento de la 
+secuencia de activación seleccionada en el temario. 
+ 
+En esta parte, cada grupo deberá presentar el diseño de su solución antes de programar. Para ello, 
+deberá incluir: 
+a) La definición de los pines GPIO que se usarán como entrada y salida 
+b) Los registros que utilizarán para la configuración y el control del sistema 
+c) El diagrama del circuito 
+d) El diagrama de flujo del comportamiento del programa 
+e) La lógica de control del Blue Button para cambiar entre velocidad normal y veloc idad 2x (y 
+viceversa) 
+f) Un breve párrafo que explique cómo funcionará el sistema diseñado de acuerdo con el temario. 
+ 
+ 
+PARTE 02 - Implementación 
+En esta parte del laboratorio, cada grupo deberá implementar el programa diseñado en la Parte 01 y 
+construir el circuito correspondiente utilizando la placa STM32. 
+ 
+Una vez implementado el programa, deberán realizar las pruebas necesarias para verificar que la 
+secuencia de LEDs funcione correctamente según el temario seleccionado. Durante esta etapa, el código 
+podrá ajustarse o corregirse para mejorar su funcionamiento. 
+ 
+Finalmente, el sistema deberá demostrarse en funcionamiento en la placa, verificando que: 
+a) La secuencia de LEDs se ejecute correctamente 
+b) El período base corresponda al indicado en el temario 
+c) El Blue Button permita duplicar la velocidad (2×)  
+d) Al presionar nuevamente el botón, la secuencia regrese a la velocidad normal. 
+ 
+Responde las siguientes preguntas en el archivo .PDF 
+1) Al ejecutar la secuencia de LEDs, ¿qué cambios debieron realizar en el programa para lograr que el 
+período observado coincidiera con el período base indicado en el temario? Explique qué factores 
+influyen en la precisión del tiempo generado con SysTick. 
+2) Al duplicar la velocidad utilizando el Blue Button, ¿qué pa rte del programa tuvo que modificarse o 
+controlarse para que la secuencia cambiara correctamente de velocidad? Explique cómo su 
+programa gestiona el cambio entre velocidad normal y velocidad 2×. 
+3) Si el programa utilizara un retardo basado en ciclos de CPU ( por ejemplo, un bucle vacío) en lugar 
+de SysTick, ¿qué ventajas y desventajas tendría respecto a la solución implementada en el 
+laboratorio? 
+4) Explique qué ocurriría si se agregaran más LEDs al sistema utilizando el mismo puerto GPIO. ¿Qué 
+aspectos del diseño del programa deberían modificarse para soportar esta ampliación? 
+5) Durante la implementación del circuito, ¿qué errores de conexión o configuración de GPIO podrían 
+provocar que los LEDs no se comporten como se espera? Explique cómo podría identificar y corregir 
+estos problemas. 
+ 
+Video de demostración 
+Cada grupo deberá grabar un video corto  y enviar el enlace de YouTube,  en el que se muestre el 
+funcionamiento del sistema implementado en la placa STM32 y explique brevemente el funcionamiento 
+y cumplimiento de los requisitos. El video debe incluir: 
+a) Una breve explicación de la secuencia de LEDs asignada en el temario. 
+b) La demostración de la ejecución de la secuencia de LEDs con el período base correspondiente. 
+c) La demostración del uso del Blue Bu tton para duplicar la velocidad de la secuencia (2×).  
+La demostración que al presionar nuevamente el botón, la secuencia regresa a la velocidad 
+normal. 
+d) Una breve explicación de cómo el programa utiliza SysTick para controlar el tiempo de la 
+secuencia. 
+e) Duración sugerida del video: 2 a 3 minutos. 

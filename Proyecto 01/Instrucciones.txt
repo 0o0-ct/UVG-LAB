@@ -1,0 +1,49 @@
+Leer detalladamente el documento de instrucciones: CC3086 Proyecto 01 - 2026.pdfDescargar CC3086 Proyecto 01 - 2026.pdf
+
+En esta actividad los estudiantes deberán desarrollar un sistema de control de LEDs utilizando la tarjeta STM32 Nucleo y programación en lenguaje C.
+
+Los estudiantes trabajarán en grupos de dos (2) integrantes. Cada grupo deberá diseñar, programar e implementar un circuito que utilice 8 salidas GPIO del microcontrolador STM32 para controlar un arreglo de LEDs, ejecutando una secuencia de activación y desactivación específica, asignada por el catedrático.
+
+El sistema deberá cumplir con los siguientes requerimientos:
+
+Implementar una secuencia cíclica de LEDs utilizando los puertos GPIO del microcontrolador.
+
+La secuencia deberá ejecutarse automáticamente utilizando un periodo base de 1.5 segundos entre estados.
+
+El sistema deberá incluir dos botones pulsadores:
+
+Un botón para incrementar la velocidad de la secuencia.
+
+Un botón para disminuir la velocidad de la secuencia.
+
+El sistema deberá permitir al menos tres niveles diferentes de velocidad.
+
+Debe existir un indicador visual del nivel de velocidad actual, utilizando LEDs u otro mecanismo visual claro.
+
+Cada vez que el sistema se reinicie o se ejecute la simulación, la secuencia deberá comenzar desde el primer estado y en la velocidad más baja.
+
+Además del circuito funcionando, cada grupo deberá elaborar un informe técnico en formato PDF que incluya:
+
+Explicación detallada del funcionamiento del sistema desarrollado.
+
+Tabla con la especificación de registros utilizados, direcciones de memoria y puertos GPIO utilizados en el proyecto.
+
+Diagrama de flujo del programa elaborado en una herramienta de software.
+
+Diagrama de conexión del circuito con la placa STM32.
+
+Análisis de fallos y soluciones, describiendo los problemas encontrados durante el desarrollo.
+
+Asignación de roles dentro del grupo, indicando qué parte desarrolló cada integrante.
+
+Conclusiones del proyecto.
+
+Bibliografía, con al menos tres fuentes confiables.
+
+Cada grupo deberá desarrollar una secuencia específica asignada por el profesor.
+
+Fecha de entrega
+
+Fecha límite de entrega: 21 de abril de 2026
+
+Hora límite: 22:00 horas
